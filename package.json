@@ -1,0 +1,33 @@
+{
+  "name": "@inspe/core",
+  "version": "0.0.4",
+  "description": "NodeJS platform core",
+  "main": "lib/core.js",
+  "typescript": {
+    "main": "lib/core.ts"
+  },
+  "typings": "lib/core.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">= 8.9.0"
+  },
+  "author": "Alexander Bebnev",
+  "license": "ISC",
+  "dependencies": {
+    "inversify": "^5.0.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.15-rc.2"
+  },
+  "devDependencies": {
+    "@types/node": "^10.7.1",
+    "tslint-config-airbnb": "^5.11.1",
+    "tslint": "5.14.0",
+    "typescript": "3.3.3333"
+  }
+}

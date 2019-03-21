@@ -1,0 +1,21 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint-config-airbnb"],
+  "jsRules": {
+    "no-unused-expression": true
+  },
+  "rules": {
+    "quotemark": [true, "single"],
+    "member-access": [true],
+    "ordered-imports": [true],
+    "max-line-length": [true, 150],
+    "member-ordering": [false],
+    "interface-name": [true, "always-prefix"],
+    "arrow-parens": false,
+    "object-literal-sort-keys": false,
+    "properties": "always",
+    "adjacent-overload-signatures": true,
+    "variable-name": [true, "allow-leading-underscore", "allow-pascal-case", "ban-keywords", "check-format"]
+  },
+  "rulesDirectory": []
+}

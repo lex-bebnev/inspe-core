@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es6",
+    "types": ["node", "reflect-metadata"],
+    "sourceMap": false,
+    "moduleResolution": "node",
+    "outDir": "./lib"
+  },
+  "exclude": [
+    "node_modules",
+    "./lib"
+  ]
+}
