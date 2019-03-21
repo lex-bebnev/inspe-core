@@ -28,13 +28,14 @@ export interface IDataPersister {
    * @param id - Entity identifier
    * @param query - Full entity selection condition
    */
-  get<TEntity extends IEntity>(id?: any, query?: IQuery): Promise<TEntity | TEntity[]>;
+  get<TEntity extends IEntity>(type: (new () => TEntity), id?: any, query?: IQuery): Promise<TEntity | TEntity[]>;
 
   /**
    * Returns the number of objects selected by conditions.
+   * @param type - Entity type
    * @param filter - List of selection conditions
    */
-  count<TEntity extends IEntity>(filter: IFilter): Promise<number>;
+  count<TEntity extends IEntity>(type: (new () => TEntity), filter: IFilter): Promise<number>;
 
   /**
    * Commit transaction

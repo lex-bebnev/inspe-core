@@ -28,11 +28,12 @@ export class DataAccessProvider implements IDataAccessProvider {
 
   /**
    * Get entity by id
+   * @param type - Entity type
    * @param id - Entity identificator
    * @param query - Full entity selection condition
    */
-  public async get<TEntity  extends IEntity>(id?: any, query?: IQuery): Promise<TEntity | TEntity[]> {
-    return await this.dataPersister.get<TEntity>(id, query);
+  public async get<TEntity  extends IEntity>(type: (new () => TEntity), id?: any, query?: IQuery): Promise<TEntity | TEntity[]> {
+    return await this.dataPersister.get<TEntity>(type, id, query);
   }
 
   /**
@@ -52,10 +53,11 @@ export class DataAccessProvider implements IDataAccessProvider {
 
   /**
    * Returns the number of objects selected by conditions.
+   * @param type - Entity type
    * @param filter - List of selection conditions
    */
-  public async count<TEntity extends IEntity>(filter: IFilter): Promise<number> {
-    return undefined;
+  public async count<TEntity extends IEntity>(type: (new () => TEntity), filter: IFilter): Promise<number> {
+    return await this.dataPersister.count(type, filter);
   }
 
   /**
@@ -67,18 +69,19 @@ export class DataAccessProvider implements IDataAccessProvider {
 
   /**
    * Return IEntityDao for TEntity type
+   * @param type - Entity type
    */
-  public getEntityDao<TEntity extends IEntity>(): IEntityDao<TEntity> {
-    const dao: IEntityDao<TEntity> = baseResolver.get<IEntityDao<TEntity>>(TYPES.IEntityDao);
+  public getEntityDao<TEntity extends IEntity>(type: (new () => TEntity)): IEntityDao<TEntity> {
+    const dao: IEntityDao<TEntity> = baseResolver.getNamedOrDefault<IEntityDao<TEntity>>(TYPES.IEntityDao, type.name);
     dao.provider = this; // TODO Костыль, разобраться можно ли оверрайдить инжектируемые свойства объектами из текущего контекста
     return dao;
   }
 
   /**
    * Return service instance type {TService}
-   * @param serviceIdentifier - Identifier in DI container
+   * @param type - Service type
    */
-  public getService<TService>(serviceIdentifier: string): TService {
-    return baseResolver.get<TService>(serviceIdentifier);
+  public getService<TService>(type: (new () => TService)): TService {
+    return baseResolver.getNamedOrDefault<TService>(TYPES.IService, type.name);
   }
 }

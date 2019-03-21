@@ -1,6 +1,6 @@
 {
   "name": "@inspe/core",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "NodeJS platform core",
   "main": "lib/core.js",
   "typescript": {
@@ -11,7 +11,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "rmdir /s /q \"./lib\" && echo \"Clean completed\" && tsc -p tsconfig.build.json && echo \"Packking...\" && npm pack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {

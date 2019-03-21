@@ -19,8 +19,8 @@ export class EntityDao<TEntity extends IEntity> implements IEntityDao<TEntity> {
   }
 
   public async select(id: any): Promise<TEntity>;
-  public async select(): Promise<TEntity[]>;
-  public async select(id?: any, query?: IQuery): Promise<any> {
-    return await this.provider.get(id, query);
+  public async select(type: (new () => TEntity)): Promise<TEntity[]>;
+  public async select(type: (new () => TEntity), id?: any, query?: IQuery): Promise<any> {
+    return await this.provider.get(type, id, query);
   }
 }

@@ -13,6 +13,10 @@ export class BaseService {
    */
   protected provider: IDataAccessProvider;
 
+  /**
+   * Initialize new instance of BaseService class
+   * @param provider - data access provider
+   */
   constructor(@inject(TYPES.IDataAccessProvider) provider) {
     if (provider === null || provider === undefined) {
       throw new ArgumentNullException('provider');
@@ -21,18 +25,19 @@ export class BaseService {
   }
 
   /**
-   * Return data access object for entity
+   *  Return data access object for entity
+   * @param type - Entity type
    */
-  protected dao<TEntity extends IEntity>(): IEntityDao<TEntity> {
-    return this.provider.getEntityDao<TEntity>();
+  protected dao<TEntity extends IEntity>(type: (new () => TEntity)): IEntityDao<TEntity> {
+    return this.provider.getEntityDao<TEntity>(type);
   }
 
   /**
    * Return service
-   * @param serviceIdentifier - service identifier in container
+   * @param type - Service type
    */
-  protected service<TService extends IService>(serviceIdentifier: string): TService {
-    return this.provider.getService<TService>(serviceIdentifier) as TService;
+  protected service<TService extends IService>(type: (new () => TService)): TService {
+    return this.provider.getService<TService>(type) as TService;
   }
 
   /**

@@ -10,11 +10,11 @@ export interface IDataAccessProvider extends IDataPersister {
   /**
    * Return IEntityDao for TEntity type
    */
-  getEntityDao<TEntity extends IEntity>(): IEntityDao<TEntity>;
+  getEntityDao<TEntity extends IEntity>(type: (new () => TEntity)): IEntityDao<TEntity>;
 
   /**
    * Return service instance type {TService}
-   * @param serviceIdentifier - Identifier in DI container
+   * @param type - service type
    */
-  getService<TService>(serviceIdentifier: string): IService;
+  getService<TService>(type: (new () => TService)): IService;
 }

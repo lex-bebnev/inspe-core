@@ -4,6 +4,7 @@ const TYPES = {
   IEntityDao: 'IEntityDao',
   IEntity: 'IEntity',
   IEntityMapping: 'IEntityMapping',
+  IService: 'IService',
 };
 
 export { TYPES };

@@ -13,14 +13,18 @@ export interface IEntityDao<TEntity extends IEntity> {
 
   /**
    * Select entity by ID
+   * @param type
    * @param id
    */
-  select(id?: any): Promise<TEntity>;
+  select(type: (new () => TEntity), id?: any): Promise<TEntity>;
 
   /**
    * Select all entities
+   * @param type
+   * @param id
+   * @param query
    */
-  select(id?: any, query?: IQuery): Promise<TEntity[]>;
+  select(type: (new () => TEntity), id?: any, query?: IQuery): Promise<TEntity[]>;
 
   /**
    * Save new entity

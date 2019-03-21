@@ -55,8 +55,10 @@ export class TypeOrmDataPersister implements IDataPersister {
   protected async physicalDelete<TEntity extends IEntity>(entity: TEntity): Promise<void> {
     throw new NotImplementedException('Not implemented in TypeORM Data Persisiter');
   }
+
   /**
    * Returns a batch of entities or one entity selected by condition and sorted.
+   * @param type - entity type
    * @param id - Entity id
    * @param query - Full entity selection condition
    * @throws {<ArgumentNullException>} {query} = null | undefined
@@ -64,9 +66,9 @@ export class TypeOrmDataPersister implements IDataPersister {
    * @throws {<ArgumentOutOfRangeException>} {query.take} < 0
    * @return Filtered list of entities or entity by id
    */
-  public async get<TEntity extends IEntity>(id?: number , query?: IQuery): Promise<TEntity | TEntity[]> {
+  public async get<TEntity extends IEntity>(type: (new () => TEntity), id?: number , query?: IQuery): Promise<TEntity | TEntity[]> {
     await this.checkConnection();
-    const entitySchema: EntitySchema<TEntity> = baseResolver.get<EntitySchema<TEntity>>(TYPES.IEntityMapping);
+    const entitySchema: EntitySchema<TEntity> = baseResolver.getNamedOrDefault<EntitySchema<TEntity>>(TYPES.IEntityMapping, type.name);
     if (!isNullOrUndefined(id)) {
       return await getManager().findOne(entitySchema, id);
     }
@@ -163,8 +165,16 @@ export class TypeOrmDataPersister implements IDataPersister {
   public async commit(): Promise<void> {
     throw new NotImplementedException('Not implemented in TypeORM Data Persisiter');
   }
-  public async count<TEntity extends IEntity>(filter: IFilter): Promise<number> {
-    throw new NotImplementedException('Not implemented in TypeORM Data Persisiter');
+
+  /**
+   * Count of entity in DB
+   * @param type - Entity type
+   * @param filter - Entity filter
+   */
+  public async count<TEntity extends IEntity>(type: (new () => TEntity), filter: IFilter): Promise<number> {
+    const entitySchema: EntitySchema<TEntity> = baseResolver.getNamedOrDefault<EntitySchema<TEntity>>(TYPES.IEntityMapping, type.name);
+    const findOptions: FindManyOptions<TEntity> = this.getOptions<TEntity>(null, null, filter, null);
+    return await getManager().count(entitySchema, findOptions);
   }
   public async rollback(): Promise<void> {
     throw new NotImplementedException('Not implemented in TypeORM Data Persisiter');
