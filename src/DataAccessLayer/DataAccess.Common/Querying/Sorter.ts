@@ -44,7 +44,7 @@ export class Sorter implements ISorter {
    * @param {SortDirection} state - Sorting direction
    */
   public addSorter(propertyName: string, state: SortDirection): Sorter {
-    this.add(new SorterEntry(state, propertyName));
+    this.add(new SorterEntry(propertyName, state));
     return this;
   }
 

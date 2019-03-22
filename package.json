@@ -1,6 +1,6 @@
 {
   "name": "@inspe/core",
-  "version": "0.0.6",
+  "version": "0.0.9",
   "description": "NodeJS platform core",
   "main": "lib/core.js",
   "typescript": {
@@ -12,7 +12,9 @@
   ],
   "scripts": {
     "build": "rmdir /s /q \"./lib\" && echo \"Clean completed\" && tsc -p tsconfig.build.json && echo \"Packking...\" && npm pack",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "publish": "npm publish --registry http://10.0.5.231:4873 && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "unpusblish": "npm unpublish @inspe/core@0.0.7 --registry http://10.0.5.231:4873"
   },
   "engines": {
     "node": ">= 8.9.0"
@@ -22,12 +24,21 @@
   "dependencies": {
     "inversify": "^5.0.1",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.15-rc.2"
+    "typeorm": "^0.2.15"
   },
   "devDependencies": {
     "@types/node": "^10.7.1",
     "tslint-config-airbnb": "^5.11.1",
     "tslint": "5.14.0",
     "typescript": "3.3.3333"
+  },
+  "peerDependencies": {
+    "inversify": "^5.0.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.15"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://git.axbit.ru"
   }
 }

@@ -17,10 +17,10 @@ export class SorterEntry implements ISorterEntry {
 
   /**
    * Initialize new instance of <class>SorterEntry</class>
-   * @param {SortDirection} direction - Sorting direction
    * @param {string} propertyName - Name of the property being sorted
+   * @param {SortDirection} direction - Sorting direction
    */
-  public constructor(direction: SortDirection, propertyName: string) {
+  public constructor(propertyName: string, direction: SortDirection) {
     this.direction = direction;
     this.propertyName = propertyName;
   }
