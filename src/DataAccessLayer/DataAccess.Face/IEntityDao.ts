@@ -16,7 +16,7 @@ export interface IEntityDao<TEntity extends IEntity> {
    * @param type
    * @param id
    */
-  select(type: (new () => TEntity), id?: any): Promise<TEntity>;
+  select<TEntity extends IEntity>(type: (new () => TEntity), id?: any): Promise<TEntity>;
 
   /**
    * Select all entities
@@ -24,17 +24,23 @@ export interface IEntityDao<TEntity extends IEntity> {
    * @param id
    * @param query
    */
-  select(type: (new () => TEntity), id?: any, query?: IQuery): Promise<TEntity[]>;
+  select<TEntity extends IEntity>(type: (new () => TEntity), id?: any, query?: IQuery): Promise<TEntity[]>;
 
   /**
    * Save new entity
    * @param entity
    */
-  save(entity: TEntity): Promise<TEntity>;
+  save<TEntity extends IEntity>(entity: TEntity): Promise<TEntity>;
 
   /**
    * Delete entity
    * @param entity
    */
-  delete(entity: TEntity): Promise<void>;
+  delete<TEntity extends IEntity>(entity: TEntity): Promise<void>;
+
+  /**
+   * Return count of entities
+   * @param type - entity type
+   */
+  count<TEntity extends IEntity>(type: (new () => TEntity)): Promise<number>;
 }

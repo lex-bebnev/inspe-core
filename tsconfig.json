@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es6",
-    "types": ["node", "reflect-metadata"],
+    "types": ["node", "reflect-metadata", "jest"],
     "sourceMap": false,
     "moduleResolution": "node",
     "outDir": "./lib"

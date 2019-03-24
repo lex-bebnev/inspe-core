@@ -102,7 +102,8 @@ export class TypeOrmDataPersister implements IDataPersister {
       throw new ArgumentNullException('entity');
     }
     await this.checkConnection();
-    return await getManager().save(entity);
+
+    return await getManager().save<TEntity>(entity);
   }
 
   /**
@@ -157,7 +158,6 @@ export class TypeOrmDataPersister implements IDataPersister {
     if (!isNullOrUndefined(take)) {
       result.take = take;
     }
-
     // TODO Add cacheable query
     return result;
   }

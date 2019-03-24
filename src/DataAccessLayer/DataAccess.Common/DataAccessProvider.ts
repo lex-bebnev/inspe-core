@@ -41,7 +41,7 @@ export class DataAccessProvider implements IDataAccessProvider {
    * @param entity - Saving entity
    */
   public async save<TEntity extends IEntity>(entity: TEntity): Promise<TEntity> {
-    return await this.dataPersister.save(entity);
+    return await this.dataPersister.save<TEntity>(entity);
   }
 
   /**
