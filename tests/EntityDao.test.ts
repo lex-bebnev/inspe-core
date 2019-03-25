@@ -13,7 +13,7 @@ describe('EntityDao', () => {
   const mockProvider = Substitute.for<IDataAccessProvider>();
   describe('Create new instance of EntityDao', () => {
     it('Should throws without Provider', () => {
-      expect(() => new EntityDao(null)).toThrowError(ArgumentNullException);
+      expect(() => new EntityDao<DummyClass>(null)).toThrowError(ArgumentNullException);
     });
     it('Should create new instance correctly', () => {
       expect(() => new EntityDao(mockProvider)).toBeDefined();
@@ -28,9 +28,29 @@ describe('EntityDao', () => {
 
       const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
       const result = await dao.count(DummyClass);
-      expect(result).toBe(count);
+      expect(result).toEqual(count);
 
       mockProvider.received(1).count(DummyClass, null);
+    });
+    it('Should throws without type', async () => {
+      const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
+      expect.assertions(1);
+      try {
+        await dao.count(undefined);
+      } catch (e) {
+        expect(e).toEqual(new ArgumentNullException('type'));
+      }
+    });
+  });
+
+  describe('Call save method', () => {
+    it('Should save new entity correctly', async () => {
+
+      const dummyEntity: DummyClass = new DummyClass();
+
+      const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
+      await dao.save(dummyEntity);
+      mockProvider.received(1).save(dummyEntity);
     });
   });
 });

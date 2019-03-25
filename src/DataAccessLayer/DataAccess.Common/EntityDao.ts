@@ -67,6 +67,9 @@ export class EntityDao<TEntity extends IEntity> implements IEntityDao<TEntity> {
    * @param type - entity type
    */
   public async count<TEntity extends IEntity>(type: { new(): TEntity }): Promise<number> {
+    if (type === null || type === undefined) {
+      throw new ArgumentNullException('type');
+    }
     return await this.provider.count(type, null); // TODO Add empty filter
   }
 }
