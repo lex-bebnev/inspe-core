@@ -11,6 +11,7 @@ class DummyClass implements IEntity {
 
 describe('EntityDao', () => {
   const mockProvider = Substitute.for<IDataAccessProvider>();
+
   describe('Create new instance of EntityDao', () => {
     it('Should throws without Provider', () => {
       expect(() => new EntityDao<DummyClass>(null)).toThrowError(ArgumentNullException);
@@ -51,6 +52,52 @@ describe('EntityDao', () => {
       const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
       await dao.save(dummyEntity);
       mockProvider.received(1).save(dummyEntity);
+    });
+    it('Should throws when save null', async () => {
+      const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
+      try {
+        await dao.save(null);
+      } catch (e) {
+        expect(e).toEqual(new ArgumentNullException('entity'));
+      }
+    });
+  });
+
+  describe('Call delete method', () => {
+    it('Should delete entity correctly', async () => {
+      const dummyEntity: DummyClass = new DummyClass();
+      const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
+
+      await dao.delete(dummyEntity);
+      mockProvider.received(1).delete(dummyEntity);
+    });
+    it('Should throws when delete null', async () => {
+      const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
+      try {
+        await dao.delete(null);
+      } catch (e) {
+        expect(e).toEqual(new ArgumentNullException('entity'));
+      }
+    });
+  });
+
+  describe('Call select by id method', () => {
+    it('Should select entity by id correctly', async () => {
+      const dummyEntity = Substitute.for<DummyClass>();
+      const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
+      const entityId: number = 1;
+      mockProvider.get(DummyClass, entityId).returns(Promise.resolve(dummyEntity));
+      const result = await dao.select(DummyClass, entityId);
+      expect(result).toBe(dummyEntity);
+      mockProvider.received(1).get(DummyClass, entityId);
+    });
+    it('Should throws without type', async () => {
+      const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
+      try {
+        await dao.select(undefined);
+      } catch (e) {
+        expect(e).toEqual(new ArgumentNullException('type'));
+      }
     });
   });
 });
