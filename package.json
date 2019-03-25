@@ -12,10 +12,10 @@
   ],
   "scripts": {
     "build": "rmdir /s /q \"./lib\" && echo \"Clean completed\" && tsc -p tsconfig.build.json && echo \"Packking...\" && npm pack",
-    "publish": "npm publish --registry http://10.0.5.231:4873 && exit 1",
+    "publishing": "npm publish --registry http://10.0.5.231:4873 && exit 1",
     "test": "jest",
     "test:cov": "jest --coverage",
-    "unpusblish": "npm unpublish @inspe/core@0.0.7 --registry http://10.0.5.231:4873"
+    "unpusblishing": "npm unpublish @inspe/core@0.0.14 --registry http://10.0.5.231:4873"
   },
   "engines": {
     "node": ">= 8.9.0"
