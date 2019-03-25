@@ -34,9 +34,10 @@ export interface IEntityDao<TEntity extends IEntity> {
 
   /**
    * Delete entity
+   * @param type
    * @param entity
    */
-  delete<TEntity extends IEntity>(entity: TEntity): Promise<void>;
+  delete<TEntity extends IEntity>(type: (new () => TEntity), entity: TEntity): Promise<void>;
 
   /**
    * Return count of entities

@@ -18,9 +18,10 @@ export interface IDataPersister {
 
   /**
    * Delete entity
+   * @param type - entity type
    * @param entity - entity
    */
-  delete<TEntity extends IEntity>(entity: TEntity): Promise<void>;
+  delete<TEntity extends IEntity>(type: (new () => TEntity), entity: TEntity): Promise<void>;
 
   /**
    * Get entity by id

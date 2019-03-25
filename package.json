@@ -1,6 +1,6 @@
 {
   "name": "@inspe/core",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "NodeJS platform core",
   "main": "lib/core.js",
   "typescript": {

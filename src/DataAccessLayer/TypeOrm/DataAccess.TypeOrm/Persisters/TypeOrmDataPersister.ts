@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { Connection, createConnection, createQueryBuilder, EntitySchema, FindManyOptions, getManager, SelectQueryBuilder } from 'typeorm';
+import { Connection, createConnection, EntitySchema, FindManyOptions, getManager } from 'typeorm';
 import { ArgumentNullException, ArgumentOutOfRangeException, NotImplementedException } from '../../../../Exceptions';
 import { isNullOrUndefined } from '../../../../Helpers';
 import { baseResolver } from '../../../../inversify.config';
@@ -44,16 +44,27 @@ export class TypeOrmDataPersister implements IDataPersister {
 
   /**
    * Delete entity
+   * @param type - entity type
    * @param entity
    */
-  public async delete<TEntity extends IEntity>(entity: TEntity): Promise<void> {
-    throw new NotImplementedException('Not implemented in TypeORM Data Persisiter');
+  public async delete<TEntity extends IEntity>(type: (new () => TEntity), entity: TEntity): Promise<void> {
+    if (entity === null || entity === undefined) {
+      throw new ArgumentNullException('entity');
+    }
+    if (type === null || type === undefined) {
+      throw new ArgumentNullException('type');
+    }
+    // TODO Расширить функционал soft удалением
+    await this.physicalDelete<TEntity>(type, entity);
   }
-  protected async softDelete<TEntity extends IEntity>(entity: TEntity): Promise<void> {
-    throw new NotImplementedException('Not implemented in TypeORM Data Persisiter');
+
+  protected async softDelete<TEntity extends IEntity>(type: (new () => TEntity), entity: TEntity): Promise<void> {
+    await this.checkConnection();
+    throw new NotImplementedException('Not implemented in TypeORM Data Persister');
   }
-  protected async physicalDelete<TEntity extends IEntity>(entity: TEntity): Promise<void> {
-    throw new NotImplementedException('Not implemented in TypeORM Data Persisiter');
+  protected async physicalDelete<TEntity extends IEntity>(type: (new () => TEntity), entity: TEntity): Promise<void> {
+    await this.checkConnection();
+    await getManager().delete(type, entity.id);
   }
 
   /**
@@ -66,26 +77,35 @@ export class TypeOrmDataPersister implements IDataPersister {
    * @throws {<ArgumentOutOfRangeException>} {query.take} < 0
    * @return Filtered list of entities or entity by id
    */
-  public async get<TEntity extends IEntity>(type: (new () => TEntity), id?: number , query?: IQuery): Promise<TEntity | TEntity[]> {
+  public async get<TEntity extends IEntity>(type: (new () => TEntity), id?: number, query?: IQuery): Promise<TEntity | TEntity[]> {
+    if (type === null || type === undefined) {
+      throw new ArgumentNullException('type');
+    }
+
     await this.checkConnection();
     const entitySchema: EntitySchema<TEntity> = baseResolver.getNamedOrDefault<EntitySchema<TEntity>>(TYPES.IEntityMapping, type.name);
+
     if (!isNullOrUndefined(id)) {
       return await getManager().findOne(entitySchema, id);
     }
     if (isNullOrUndefined(query)) {
       throw new ArgumentNullException('query');
     }
-
     // TODO Добавить проверку на максимально допустимое значение параметров
     if (!isNullOrUndefined(query.skip)) {
+      if (!Number.isInteger(query.skip)) {
+        throw new ArgumentOutOfRangeException('Number of skip entities must be a number');
+      }
       if (query.skip < 0) {
         throw new ArgumentOutOfRangeException('Number of skip entities can\'t be less than 0');
       }
     }
-
     if (!isNullOrUndefined(query.take)) {
+      if (!Number.isInteger(query.take)) {
+        throw new ArgumentOutOfRangeException('Number of take entities must be a number');
+      }
       if (query.take < 0) {
-        throw new ArgumentOutOfRangeException('Number of skip entities can\'t be less than 0');
+        throw new ArgumentOutOfRangeException('Number of take entities can\'t be less than 0');
       }
     }
 
@@ -116,30 +136,6 @@ export class TypeOrmDataPersister implements IDataPersister {
   }
 
   /**
-   * Create database query object with filters and sorting
-   * @param {number} skip
-   * @param {number} take
-   * @param {IFilter} filter
-   * @param {ISorter} sorter
-   */
-  protected getQuery<TEntity extends IEntity>(skip?: number, take?: number, filter?: IFilter, sorter?: ISorter): SelectQueryBuilder<TEntity> {
-    const result: SelectQueryBuilder<TEntity> = createQueryBuilder<TEntity>();
-
-    // TODO Apply filter and sorter
-    FilterHelper.applyFilterQueryBuilder<TEntity>(result, filter);
-    SorterHelper.applySorterQueryBuilder<TEntity>(result, sorter);
-
-    if (!isNullOrUndefined(skip)) {
-      result.skip(skip);
-    }
-    if (!isNullOrUndefined(take)) {
-      result.take(take);
-    }
-
-    // TODO Add cacheable query
-    return result;
-  }
-  /**
    * Create database filter option object with filters and sorting
    * @param skip
    * @param take
@@ -152,18 +148,14 @@ export class TypeOrmDataPersister implements IDataPersister {
     FilterHelper.applyFilter(result, filter);
     SorterHelper.applySorter(result, sorter);
 
-    if (!isNullOrUndefined(skip)) {
+    if (!isNullOrUndefined(skip) && Number.isInteger(result.skip)) {
       result.skip = skip;
     }
-    if (!isNullOrUndefined(take)) {
+    if (!isNullOrUndefined(take) && Number.isInteger(result.take)) {
       result.take = take;
     }
     // TODO Add cacheable query
     return result;
-  }
-
-  public async commit(): Promise<void> {
-    throw new NotImplementedException('Not implemented in TypeORM Data Persisiter');
   }
 
   /**
@@ -172,10 +164,24 @@ export class TypeOrmDataPersister implements IDataPersister {
    * @param filter - Entity filter
    */
   public async count<TEntity extends IEntity>(type: (new () => TEntity), filter: IFilter): Promise<number> {
+    if (type === null || type === undefined) {
+      throw new ArgumentNullException('type');
+    }
     const entitySchema: EntitySchema<TEntity> = baseResolver.getNamedOrDefault<EntitySchema<TEntity>>(TYPES.IEntityMapping, type.name);
     const findOptions: FindManyOptions<TEntity> = this.getOptions<TEntity>(null, null, filter, null);
     return await getManager().count(entitySchema, findOptions);
   }
+
+  /**
+   * Commit transaction
+   */
+  public async commit(): Promise<void> {
+    throw new NotImplementedException('Not implemented in TypeORM Data Persisiter');
+  }
+
+  /**
+   * Rollback transaction
+   */
   public async rollback(): Promise<void> {
     throw new NotImplementedException('Not implemented in TypeORM Data Persisiter');
   }

@@ -68,15 +68,24 @@ describe('EntityDao', () => {
       const dummyEntity: DummyClass = new DummyClass();
       const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
 
-      await dao.delete(dummyEntity);
-      mockProvider.received(1).delete(dummyEntity);
+      await dao.delete<DummyClass>(DummyClass, dummyEntity);
+      mockProvider.received(1).delete(DummyClass, dummyEntity);
     });
     it('Should throws when delete null', async () => {
       const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
       try {
-        await dao.delete(null);
+        await dao.delete(DummyClass, null);
       } catch (e) {
         expect(e).toEqual(new ArgumentNullException('entity'));
+      }
+    });
+    it('Should throws when delete type null', async () => {
+      const dummyEntity = Substitute.for<DummyClass>();
+      const dao: IEntityDao<DummyClass> = new EntityDao<DummyClass>(mockProvider);
+      try {
+        await dao.delete(null, dummyEntity);
+      } catch (e) {
+        expect(e).toEqual(new ArgumentNullException('type'));
       }
     });
   });

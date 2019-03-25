@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import { ArgumentNullException, NotImplementedException } from '../../Exceptions';
 import { baseResolver } from '../../inversify.config';
 import { IEntity } from '../../Model/Entities.Base.Face';
 import { TYPES } from '../../types';
@@ -13,17 +14,25 @@ export class DataAccessProvider implements IDataAccessProvider {
   /**
    * Initialize new instance of DataAccessProvider
    * @param dataPersister
+   * @throws {ArgumentNullException} dataPersisiter = null
    */
   public constructor(@inject(TYPES.IDataPersister) dataPersister: IDataPersister) {
+    if (dataPersister === null || dataPersister === undefined) {
+      throw new ArgumentNullException('dataPersister');
+    }
     this.dataPersister = dataPersister;
   }
 
   /**
    * Delete entity
+   * @param type - entity type
    * @param entity - entity
    */
-  public async delete<TEntity extends IEntity>(entity: TEntity): Promise<void> {
-    await this.dataPersister.delete(entity);
+  public async delete<TEntity extends IEntity>(type: (new () => TEntity), entity: TEntity): Promise<void> {
+    if (entity === null || entity === undefined) {
+      throw new ArgumentNullException('entity');
+    }
+    await this.dataPersister.delete(type, entity);
   }
 
   /**
@@ -33,6 +42,9 @@ export class DataAccessProvider implements IDataAccessProvider {
    * @param query - Full entity selection condition
    */
   public async get<TEntity  extends IEntity>(type: (new () => TEntity), id?: any, query?: IQuery): Promise<TEntity | TEntity[]> {
+    if (type === null || type === undefined) {
+      throw new ArgumentNullException('type');
+    }
     return await this.dataPersister.get<TEntity>(type, id, query);
   }
 
@@ -41,6 +53,9 @@ export class DataAccessProvider implements IDataAccessProvider {
    * @param entity - Saving entity
    */
   public async save<TEntity extends IEntity>(entity: TEntity): Promise<TEntity> {
+    if (entity === null || entity === undefined) {
+      throw new ArgumentNullException('entity');
+    }
     return await this.dataPersister.save<TEntity>(entity);
   }
 
@@ -48,7 +63,7 @@ export class DataAccessProvider implements IDataAccessProvider {
    * Commit transaction
    */
   public async commit(): Promise<void> {
-    return undefined;
+    throw new NotImplementedException();
   }
 
   /**
@@ -57,6 +72,12 @@ export class DataAccessProvider implements IDataAccessProvider {
    * @param filter - List of selection conditions
    */
   public async count<TEntity extends IEntity>(type: (new () => TEntity), filter: IFilter): Promise<number> {
+    if (type === null || type === undefined) {
+      throw new ArgumentNullException('type');
+    }
+    /*if (filter === null || filter === undefined) {
+      throw new ArgumentNullException('filter');
+    }*/ // TODO After add empty filter uncomment
     return await this.dataPersister.count(type, filter);
   }
 
@@ -64,7 +85,7 @@ export class DataAccessProvider implements IDataAccessProvider {
    * Rollback transaction
    */
   public async rollback(): Promise<void> {
-    return undefined;
+    throw new NotImplementedException();
   }
 
   /**
@@ -72,6 +93,9 @@ export class DataAccessProvider implements IDataAccessProvider {
    * @param type - Entity type
    */
   public getEntityDao<TEntity extends IEntity>(type: (new () => TEntity)): IEntityDao<TEntity> {
+    if (type === null || type === undefined) {
+      throw new ArgumentNullException('type');
+    }
     const dao: IEntityDao<TEntity> = baseResolver.getNamedOrDefault<IEntityDao<TEntity>>(TYPES.IEntityDao, type.name);
     dao.provider = this; // TODO Костыль, разобраться можно ли оверрайдить инжектируемые свойства объектами из текущего контекста
     return dao;
@@ -82,6 +106,9 @@ export class DataAccessProvider implements IDataAccessProvider {
    * @param type - Service type
    */
   public getService<TService>(type: (new () => TService)): TService {
+    if (type === null || type === undefined) {
+      throw new ArgumentNullException('type');
+    }
     return baseResolver.getNamedOrDefault<TService>(TYPES.IService, type.name);
   }
 }

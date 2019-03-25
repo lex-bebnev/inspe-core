@@ -25,14 +25,19 @@ export class EntityDao<TEntity extends IEntity> implements IEntityDao<TEntity> {
 
   /**
    * Delete entity
+   * @param type
    * @param {TEntity} entity - Deleted entity
-   * @throws {ArgumentNullException} {entity} === null
+   * @throws {ArgumentNullException} {entity} = null
+   * @throws {ArgumentNullException} {type} = null
    */
-  public async delete<TEntity extends IEntity>(entity: TEntity): Promise<void> {
+  public async delete<TEntity extends IEntity>(type: (new () => TEntity), entity: TEntity): Promise<void> {
+    if (type === null || type === undefined) {
+      throw new ArgumentNullException('type');
+    }
     if (entity === null || entity === undefined) {
       throw new ArgumentNullException('entity');
     }
-    await this.provider.save<TEntity>(entity);
+    await this.provider.delete<TEntity>(type, entity);
   }
 
   /**
