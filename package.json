@@ -1,6 +1,6 @@
 {
   "name": "@inspe/core",
-  "version": "0.0.14",
+  "version": "0.0.16",
   "description": "NodeJS platform core",
   "main": "lib/core.js",
   "typescript": {
@@ -12,7 +12,9 @@
   ],
   "scripts": {
     "build": "rmdir /s /q \"./lib\" && echo \"Clean completed\" && tsc -p tsconfig.build.json && echo \"Packking...\" && npm pack",
-    "publishing": "npm publish --registry http://10.0.5.231:4873 && exit 1",
+    "example": "nodemon",
+    "example:debug": "nodemon --config nodemon-debug.json",
+    "publishing": "npm publish --registry http://10.0.5.231:4873 && exit 0",
     "test": "jest",
     "test:cov": "jest --coverage",
     "unpusblishing": "npm unpublish @inspe/core@0.0.14 --registry http://10.0.5.231:4873"
@@ -28,10 +30,23 @@
     "typeorm": "^0.2.15"
   },
   "devDependencies": {
+    "@nestjs/common": "^5.4.0",
+    "@nestjs/core": "^5.4.0",
+    "@nestjs/swagger": "^2.5.1",
+    "class-transformer": "^0.2.0",
+    "class-validator": "^0.9.1",
+    "pg": "^7.9.0",
+    "@types/express": "^4.16.0",
+    "ts-loader": "^4.4.2",
+    "ts-node": "^7.0.1",
+    "tsconfig-paths": "^3.5.0",
     "@fluffy-spoon/substitute": "^1.80.0",
     "@types/jest": "^24.0.11",
     "@types/node": "^10.7.1",
+    "nodemon": "^1.18.3",
     "jest": "^24.5.0",
+    "rimraf": "^2.6.2",
+    "rxjs": "^6.2.2",
     "ts-jest": "^24.0.0",
     "tslint": "5.14.0",
     "tslint-config-airbnb": "^5.11.1",
