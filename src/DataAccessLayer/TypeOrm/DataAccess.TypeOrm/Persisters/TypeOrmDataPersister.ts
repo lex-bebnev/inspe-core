@@ -122,8 +122,8 @@ export class TypeOrmDataPersister implements IDataPersister {
       throw new ArgumentNullException('entity');
     }
     await this.checkConnection();
-
-    return await getManager().save<TEntity>(entity);
+    const entitySchema: EntitySchema<TEntity> = baseResolver.getNamedOrDefault<EntitySchema<TEntity>>(TYPES.IEntityMapping, entity.constructor.name);
+    return await getManager().save<TEntity>(entitySchema.options.name, entity);
   }
 
   /**
