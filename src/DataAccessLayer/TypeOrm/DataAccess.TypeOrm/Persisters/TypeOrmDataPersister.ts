@@ -148,10 +148,10 @@ export class TypeOrmDataPersister implements IDataPersister {
     FilterHelper.applyFilter(result, filter);
     SorterHelper.applySorter(result, sorter);
 
-    if (!isNullOrUndefined(skip) && Number.isInteger(result.skip)) {
+    if (!isNullOrUndefined(skip) && Number.isInteger(skip)) {
       result.skip = skip;
     }
-    if (!isNullOrUndefined(take) && Number.isInteger(result.take)) {
+    if (!isNullOrUndefined(take) && Number.isInteger(take)) {
       result.take = take;
     }
     // TODO Add cacheable query
