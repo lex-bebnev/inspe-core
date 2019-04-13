@@ -115,14 +115,15 @@ export class TypeOrmDataPersister implements IDataPersister {
 
   /**
    * Save entity
+   * @param type
    * @param entity
    */
-  public async save<TEntity extends IEntity>(entity: TEntity): Promise<TEntity> {
+  public async save<TEntity extends IEntity>(type: (new () => TEntity), entity: TEntity): Promise<TEntity> {
     if (isNullOrUndefined(entity)) {
       throw new ArgumentNullException('entity');
     }
     await this.checkConnection();
-    const entitySchema: EntitySchema<TEntity> = baseResolver.getNamedOrDefault<EntitySchema<TEntity>>(TYPES.IEntityMapping, entity.constructor.name);
+    const entitySchema: EntitySchema<TEntity> = baseResolver.getNamedOrDefault<EntitySchema<TEntity>>(TYPES.IEntityMapping, type.name);
     return await getManager().save<TEntity>(entitySchema.options.name, entity);
   }
 

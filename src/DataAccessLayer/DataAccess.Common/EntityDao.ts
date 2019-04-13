@@ -30,14 +30,15 @@ export class EntityDao<TEntity extends IEntity> implements IEntityDao<TEntity> {
 
   /**
    * Save entity
+   * @param type
    * @param entity - Saved entity
    * @throws {ArgumentNullException} {entity} === null
    */
-  public async save(entity: TEntity): Promise<TEntity> {
+  public async save(type: (new () => TEntity), entity: TEntity): Promise<TEntity> {
     if (entity === null || entity === undefined) {
       throw new ArgumentNullException('entity');
     }
-    return await this.provider.save<TEntity>(entity);
+    return await this.provider.save<TEntity>(type, entity);
   }
 
   /**

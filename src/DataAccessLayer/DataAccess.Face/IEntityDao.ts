@@ -28,9 +28,10 @@ export interface IEntityDao<TEntity extends IEntity> {
 
   /**
    * Save new entity
+   * @param type
    * @param entity
    */
-  save(entity: TEntity): Promise<TEntity>;
+  save(type: (new () => TEntity), entity: TEntity): Promise<TEntity>;
 
   /**
    * Delete entity

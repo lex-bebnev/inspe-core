@@ -12,9 +12,10 @@ export interface IDataPersister {
   readonly isReadOnly: boolean;
   /**
    * Save entity
+   * @param type
    * @param entity - Saving entity
    */
-  save<TEntity extends IEntity>(entity: TEntity): Promise<TEntity>;
+  save<TEntity extends IEntity>(type: (new () => TEntity), entity: TEntity): Promise<TEntity>;
 
   /**
    * Delete entity

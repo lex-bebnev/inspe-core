@@ -50,13 +50,14 @@ export class DataAccessProvider implements IDataAccessProvider {
 
   /**
    * Save entity
+   * @param type
    * @param entity - Saving entity
    */
-  public async save<TEntity extends IEntity>(entity: TEntity): Promise<TEntity> {
+  public async save<TEntity extends IEntity>(type: (new () => TEntity), entity: TEntity): Promise<TEntity> {
     if (entity === null || entity === undefined) {
       throw new ArgumentNullException('entity');
     }
-    return await this.dataPersister.save<TEntity>(entity);
+    return await this.dataPersister.save<TEntity>(type, entity);
   }
 
   /**
