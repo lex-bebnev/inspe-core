@@ -1,4 +1,4 @@
-import { Brackets, Equal, FindConditions, FindManyOptions, MoreThan, MoreThanOrEqual, Not, SelectQueryBuilder } from 'typeorm';
+import { Between, Brackets, Equal, FindConditions, FindManyOptions, In, MoreThan, MoreThanOrEqual, Not, SelectQueryBuilder } from 'typeorm';
 import { ArgumentNullException, NotImplementedException } from '../../../Exceptions';
 import { isNullOrUndefined } from '../../../Helpers';
 import { ConditionOperator, IFilter, IFilterEntry, IFilterGroup, LogicalOperator } from '../../DataAccess.Face';
@@ -94,6 +94,10 @@ export class FilterHelper {
         return MoreThan(entry.values[0]);
       case ConditionOperator.GreaterOrEqual:
         return MoreThanOrEqual(entry.values[0]);
+      case ConditionOperator.In:
+        return In(entry.values as []);
+      case ConditionOperator.Between:
+        return Between(entry.values[0], entry.values[1]);
     }
   }
 
