@@ -15,6 +15,7 @@
     "example": "nodemon",
     "example:debug": "nodemon --config nodemon-debug.json",
     "publishing": "npm publish --registry http://10.0.5.231:4873 && exit 0",
+    "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
     "test:cov": "jest --coverage",
     "unpusblishing": "npm unpublish @inspe/core@0.0.14 --registry http://10.0.5.231:4873"

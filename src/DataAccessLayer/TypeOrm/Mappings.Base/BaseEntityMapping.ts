@@ -22,8 +22,8 @@ export const BaseEntityMapping = {
     updateDate: true,
   } as EntitySchemaColumnOptions,
   isActive: {
-      name: 'active',
-      type: 'bool',
-      default: true,
+    name: 'active',
+    type: 'bool',
+    default: true,
   } as EntitySchemaColumnOptions,
 };

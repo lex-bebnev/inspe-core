@@ -7,6 +7,6 @@ export const BaseNamedEntity = {
   name: {
     type: 'varchar',
     name: 'name',
-	nullable: false,
+    nullable: false,
   } as EntitySchemaColumnOptions,
 };
